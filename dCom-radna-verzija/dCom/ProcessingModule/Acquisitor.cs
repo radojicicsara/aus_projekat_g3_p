@@ -1,5 +1,6 @@
 ﻿using Common;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace ProcessingModule
@@ -55,8 +56,38 @@ namespace ProcessingModule
         /// Acquisitor thread logic.
         /// </summary>
 		private void Acquisition_DoWork()
-		{
-            //TO DO: IMPLEMENT
+        {
+            List<IConfigItem> configItems = configuration.GetConfigurationItems();
+
+            while (true)
+            {
+                // Čeka signal iz AutomationManagera (koji stiže svake sekunde)
+                acquisitionTrigger.WaitOne();
+
+                foreach (IConfigItem configItem in configItems)
+                {
+                    // Povećavamo brojač sekundi za ovaj podatak
+                    configItem.SecondsPassedSinceLastPoll++;
+
+                    // ODREĐIVANJE INTERVALA:
+                    // Ako je digitalni (DO_REG), interval je 2. Za ostale (analogne) je 3.
+                    int requiredInterval = (configItem.RegistryType == PointType.DIGITAL_OUTPUT) ? 2 : 3;
+
+                    if (configItem.SecondsPassedSinceLastPoll >= requiredInterval)
+                    {
+                        // Izvrši očitavanje
+                        processingManager.ExecuteReadCommand(
+                            configItem,
+                            configuration.GetTransactionId(),
+                            configuration.UnitAddress,
+                            configItem.StartAddress,
+                            configItem.NumberOfRegisters);
+
+                        // Resetuj brojač za ovu stavku
+                        configItem.SecondsPassedSinceLastPoll = 0;
+                    }
+                }
+            }
         }
 
         #endregion Private Methods

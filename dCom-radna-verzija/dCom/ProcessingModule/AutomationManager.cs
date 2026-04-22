@@ -60,10 +60,15 @@ namespace ProcessingModule
 
 		private void AutomationWorker_DoWork()
 		{
-			//while (!disposedValue)
-			//{
-			//}
-		}
+            while (!disposedValue)
+            {
+                // Šaljemo signal Acquisitoru da je prošla jedna sekunda
+                automationTrigger.Set();
+
+                // Čekamo 1000 milisekundi (1 sekundu) pre sledećeg kucanja
+                Thread.Sleep(1000);
+            }
+        }
 
 		#region IDisposable Support
 		private bool disposedValue = false; // To detect redundant calls
