@@ -53,8 +53,8 @@ namespace Modbus.ModbusFunctions
                 var address = BitConverter.ToUInt16(response, 8);
                 var value = BitConverter.ToUInt16(response, 10);
 
-                address = (ushort)IPAddress.NetworkToHostOrder((short)address);
-                value = (ushort)IPAddress.NetworkToHostOrder((short)value);
+                address = (ushort)IPAddress.NetworkToHostOrder((ushort)address);
+                value = (ushort)IPAddress.NetworkToHostOrder((ushort)value);
                 r.Add(new Tuple<PointType, ushort>(PointType.DIGITAL_OUTPUT, address), value);
             }
             else

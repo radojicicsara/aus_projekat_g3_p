@@ -11,10 +11,12 @@ namespace dCom.ViewModel
 		{
 		}
 
+        
 		protected override bool WriteCommand_CanExecute(object obj)
 		{
 			return !(CommandedValue < 0 || CommandedValue > 1);
 		}
+
 
         protected override void WriteCommand_Execute(object obj)
         {
