@@ -53,22 +53,29 @@ namespace Modbus.ModbusFunctions
                 ushort start_address = ((ModbusReadCommandParameters)CommandParameters).StartAddress;
                 int count = 0;
                 int byte_count = response[8];
+
                 int mask = 1;
+
                 for (int i = 0; i < byte_count; i++)
                 {
+
                     byte temp = response[9 + i];
+
                     for (int j = 0; j < 8; j++)
                     {
                         ushort value = (ushort)(temp & mask);
                         r.Add(new Tuple<PointType, ushort>(PointType.DIGITAL_OUTPUT, start_address), value);
+
                         temp >>= 1;
                         count++;
                         start_address++;
-                    }
-                    ushort quantity = ((ModbusReadCommandParameters)CommandParameters).Quantity;
-                    if (quantity <= count)
-                    {
-                        break;
+
+                        ushort quantity = ((ModbusReadCommandParameters)CommandParameters).Quantity;
+
+                        if (quantity <= count)
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -80,4 +87,3 @@ namespace Modbus.ModbusFunctions
         }
     }
 }
-    

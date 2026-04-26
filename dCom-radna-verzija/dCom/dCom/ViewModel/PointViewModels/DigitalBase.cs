@@ -36,7 +36,8 @@ namespace dCom.ViewModel
 
         protected override bool WriteCommand_CanExecute(object obj)
         {
-            return false;
+			return false;
+			
         }
     }
 }

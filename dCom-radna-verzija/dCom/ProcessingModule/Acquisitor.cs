@@ -71,19 +71,16 @@ namespace ProcessingModule
 
                     // ODREĐIVANJE INTERVALA:
                     // Ako je digitalni (DO_REG), interval je 2. Za ostale (analogne) je 3.
-                    int requiredInterval = (configItem.RegistryType == PointType.DIGITAL_OUTPUT) ? 2 : 3;
+                    //int requiredInterval = (configItem.RegistryType == PointType.DIGITAL_OUTPUT) ? 2 : 3;
 
-                    if (configItem.SecondsPassedSinceLastPoll >= requiredInterval)
+                    if (configItem.SecondsPassedSinceLastPoll >= configItem.AcquisitionInterval)
                     {
-                        // Izvrši očitavanje
                         processingManager.ExecuteReadCommand(
                             configItem,
                             configuration.GetTransactionId(),
                             configuration.UnitAddress,
                             configItem.StartAddress,
                             configItem.NumberOfRegisters);
-
-                        // Resetuj brojač za ovu stavku
                         configItem.SecondsPassedSinceLastPoll = 0;
                     }
                 }
